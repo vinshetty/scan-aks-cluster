@@ -14,4 +14,3 @@ Popeye is a utility that scans live Kubernetes cluster and reports potential iss
     AZ-Connection:  Azure Service Connection to connect azure cloud 
   ```
 ## OutPut/Result
-[a link]( https://github.com/vinshetty/scan-aks-cluster/blob/main/htmlreport.html)
