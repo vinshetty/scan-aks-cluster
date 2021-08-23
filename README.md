@@ -7,10 +7,10 @@ Popeye is a utility that scans live Kubernetes cluster and reports potential iss
 -	K8s Namespace 
 -	Azure service connection
 -	Update below variables in attached Azure DevOps Pipeline
-```
-  **RG-NAME:** Resource Group of AKS cluster 
-  **AKS-NAME:** AKS Cluster Name 
-  **NAME-SPACE:** K8s Namespace
-  **AZ-Connection:**  Azure Service Connection to connect azure cloud 
-```
+  ```
+    RG-NAME: Resource Group of AKS cluster 
+    AKS-NAME: AKS Cluster Name 
+   NAME-SPACE: K8s Namespace
+   AZ-Connection:  Azure Service Connection to connect azure cloud 
+  ```
 ## OutPut/Result
