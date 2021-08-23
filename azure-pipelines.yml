@@ -1,0 +1,41 @@
+name: $(majorMinorVersion).$(semanticVersion).$(rev:r)
+pool:
+  name: Azure Pipelines
+  vmImage: ubuntu-18.04
+variables:
+  majorMinorVersion: 1
+  semanticVersion: 0.0
+  RG-NAME: <Resource Group of AKS cluster>
+  AKS-NAME: <AKS Cluster Name >
+  NAME-SPACE: <K8s Namespace>
+  AZ-Connection: <Azure Service Connection to connect azure cloud>
+steps:
+- task: AzureCLI@2
+  displayName: Azure CLI
+  inputs:
+    azureSubscription: '$(AZ-Connection)'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      # az --version
+      # az account show
+      az aks get-credentials --resource-group $(RG-NAME) --name $(AKS-NAME)
+      kubectl get ns
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      docker run --rm -i -v $HOME/.kube:/root/.kube derailed/popeye --context $(AKS-NAME) -n $(NAME-SPACE) --force-exit-zero
+      docker run --rm -i -v $HOME/.kube:/root/.kube -e POPEYE_REPORT_DIR=/tmp/popeye -v /tmp:/tmp derailed/popeye --context $(AKS-NAME) -n $(NAME-SPACE) --force-exit-zero --save --out junit --output-file report.xml
+      docker run --rm -i -v $HOME/.kube:/root/.kube -e POPEYE_REPORT_DIR=/tmp/popeye -v /tmp:/tmp derailed/popeye --context $(AKS-NAME) -n $(NAME-SPACE) --force-exit-zero --save --out html --output-file htmlreport.html
+      cp /tmp/popeye/report.xml .
+      cp /tmp/popeye/htmlreport.html .
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: 'report.xml'
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: 'htmlreport.html'
+    artifact: 'aksreport'
+    publishLocation: 'pipeline'
