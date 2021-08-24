@@ -11,7 +11,7 @@ variables:
   AZ-Connection: <Azure Service Connection to connect azure cloud>
 steps:
 - task: AzureCLI@2
-  displayName: Azure CLI
+  displayName: AKS Login
   inputs:
     azureSubscription: '$(AZ-Connection)'
     scriptType: bash
@@ -23,6 +23,7 @@ steps:
       kubectl get ns
 
 - task: CmdLine@2
+  displayName: Scanning the AKS Cluster
   inputs:
     script: |
       docker run --rm -i -v $HOME/.kube:/root/.kube derailed/popeye --context $(AKS-NAME) -n $(NAME-SPACE) --force-exit-zero
